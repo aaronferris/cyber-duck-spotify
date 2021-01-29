@@ -1,0 +1,17 @@
+cyber_duck_spotify.artist:
+  path: '/artist/{artist_name}'
+  defaults:
+    _controller: '\Drupal\cyber_duck_spotify\Controller\SpotifyArtistPageController::content'
+    _title: 'Artist | Cyber Duck demo'
+    artist_name: ''
+  requirements:
+    _permission: 'access artist pages'
+cyber_duck_spotify.admin:
+  path: '/admin/config/spotify'
+  defaults:
+    _form: '\Drupal\cyber_duck_spotify\Form\CyberDuckSpotifyAdminForm'
+    _title: 'Cyber Duck Spotify configuration'
+  requirements:
+    _permission: 'administer site configuration'
+  options:  
+    _admin_route: TRUE 

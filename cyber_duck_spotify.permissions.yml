@@ -1,0 +1,4 @@
+access artist pages:
+  title: 'Access artist pages'
+  description: 'Allows users to access artist pages.'
+  restrict access: TRUE

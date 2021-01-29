@@ -1,0 +1,5 @@
+cyber_duck_spotify:
+  version: '1.x'
+  css:
+    theme:
+      theme/css/cyber-duck-spotify.css: {}

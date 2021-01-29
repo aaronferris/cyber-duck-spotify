@@ -1,0 +1,6 @@
+name: 'Cyber Duck Spotify'
+type: module
+package: Cyber Duck
+description: 'A demo module to gather and display Spotify data'
+core: 8.x
+configure: cyber_duck_spotify.admin

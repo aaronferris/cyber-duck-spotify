@@ -1,0 +1,4 @@
+services:
+  cyber_duck_spotify.client:
+    class: Drupal\cyber_duck_spotify\Service\SpotifyClient
+    arguments: ["@http_client", "@config.factory", "@logger.factory"]

@@ -1,0 +1,5 @@
+spotify_api_url: 'https://api.spotify.com/v1/'
+_core:
+  default_config_hash: s56evl3mZ7nuwnBSTLqzXwlNyz_YVq1N5weKfvRE9yg
+spotify_api_client_id: ''
+spotify_api_client_secret: ''

@@ -1,0 +1,6 @@
+# Ignore node related files.
+npm-debug.log
+node_modules
+
+# Ignore OSx specific files.
+.DS_Store

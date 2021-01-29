@@ -1,0 +1,27 @@
+<?php
+
+use Drupal\user\Entity\Role;
+
+/**
+ * @file
+ * Install and uninstall functions for Cyber Duck Spotify.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function cyber_duck_spotify_install() {
+  $role_object = Role::load('authenticated');
+  $role_object->grantPermission('access artist pages');
+  $role_object->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function cyber_duck_spotify_uninstall() {
+  $role_object = Role::load('authenticated');
+  // TODO remove permission.
+  $role_object->revokePermission('access artist pages');
+  $role_object->save();
+}

@@ -1,0 +1,65 @@
+#########################
+## Sass Lint Configuration File
+## @see https://github.com/sasstools/sass-lint
+#########################
+# Linter Options
+options:
+  # Merge these rules with sass-lint's default rules
+  merge-default-rules: false
+  # Raise an error if more than 50 warnings are generated
+  max-warnings: 50
+# File Options
+files:
+  include: 'sass/*.s+(a|c)ss'
+# Rule Configuration
+rules:
+  brace-style:
+    - 1tbs
+  class-name-format:
+    - 2
+    -
+      convention: hyphenatedbem
+
+  empty-line-between-blocks:
+    - 1
+    -
+      include: true
+  extends-before-mixins: 2
+  extends-before-declarations: 2
+  force-element-nesting: 0
+  nesting-depth:
+    -
+      max-depth:
+       - 3
+  placeholder-in-extend: 2
+  mixins-before-declarations:
+    - 2
+    -
+      exclude:
+        - breakpoint
+        - mq
+
+  no-css-comments: 0
+  no-warn: 1
+  no-debug: 1
+  no-ids: 1
+  no-important: 2
+  hex-notation:
+    - 2
+    -
+      style: uppercase
+  indentation:
+    - 2
+    -
+      size: 2
+  property-sort-order:
+    - 1
+    -
+      order: smacss
+      ignore-custom-properties: true
+  variable-for-property:
+    - 1
+    -
+      properties:
+        - background-color
+        - color

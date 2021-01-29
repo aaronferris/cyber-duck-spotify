@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Spotify artist page.
+ *
+ * Available variables:
+ * - artist: Spotify API artist result.
+ *  - name: artist name
+ *  - id: Spotify artist id
+ *  - genres: artist related genres
+ *  - image: artist related image
+ *  - followers: how many followers the artist has (twitter/instagram?)
+ *  - spotify_external_url: url to this artist in Spotify
+#}
+{{ attach_library('cyber_duck_spotify/cyber_duck_spotify') }}
+
+<div class="spotify-data--page">
+  {% if artist %}
+    <h2 class="spotify-data-artist--name">{{ artist.name }}</h2>
+    <div class="spotify-data-artist--image">
+      <img src="{{artist.image}}" alt="{{ artist.name }}">
+    </div>
+    <div class="spotify-data-artist--genres">Genres:{{ artist.genres }}</div>
+    <div class="spotify-data-artist--followers">
+      {{ "Spotify followers:"|t }} {{artist.followers}}
+    </div>
+    <div class="spotify-data-artist--spotify">
+      <a href="{{artist.spotify_external_url}}" title="{{ artist.name}}">{{ "Open artist in Spotify"|t }}</a>
+    </div>
+   {% else %}
+     {{ "No results found"|t }}
+  {% endif %}
+</div>

@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Contains cyber_duck_spotify.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function cyber_duck_spotify_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main help for the cyber duck demo module.
+    case 'help.page.cyber_duck_spotify':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Cyber Duck demo module to display Spotify data') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function cyber_duck_spotify_theme($existing, $type, $theme, $path) {
+  return [
+    'cyber-duck-spotify-block' => [
+      'variables' => [
+        'artists' => NULL,
+      ],
+      'template' => 'cyber-duck-spotify-block',
+    ],
+    'cyber-duck-spotify-page' => [
+      'variables' => [
+        'artist' => NULL,
+      ],
+      'template' => 'cyber-duck-spotify-page',
+    ],
+  ];
+}
