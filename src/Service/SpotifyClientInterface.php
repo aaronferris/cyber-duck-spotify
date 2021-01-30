@@ -37,12 +37,12 @@ interface SpotifyClientInterface {
    *   An optional Spotify artist ID.
    * @param string $search_type
    *   The search type, albums, artists, songs etc.
-   * @param array $auth
+   * @param object $auth
    *   An optional auth result for multiple searches.
    *
    * @return array|bool
    *   An array of results or false.
    */
-  public function getArtistDatabyId($artist_id, $search_type, array $auth);
+  public function getArtistDatabyId($artist_id, $search_type, $auth);
 
 }
