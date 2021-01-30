@@ -3,3 +3,13 @@ cyber_duck_spotify:
   css:
     theme:
       styles/css/cyber-duck-spotify.css: {}
+
+cyber_duck_react:
+  version: '1.x'
+  js:
+    app/build/main.js: {}
+  css:
+   component:
+     app/build/main.css: {}
+  dependencies:
+   - core/drupal

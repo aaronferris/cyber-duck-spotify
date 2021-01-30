@@ -41,5 +41,9 @@ function cyber_duck_spotify_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'cyber-duck-spotify-page',
     ],
+    'cyber_duck_spotify_react_page' => [
+      'template' => 'cyber-duck-spotify-react-page',
+      'variables' => [],
+    ],
   ];
 }

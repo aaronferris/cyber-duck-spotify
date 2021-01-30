@@ -6,6 +6,14 @@ cyber_duck_spotify.artist:
     artist_name: ''
   requirements:
     _permission: 'access artist pages'
+cyber_duck_spotify.react_artist:
+  path: '/react-artist/{artist_name}'
+  defaults:
+    _controller: '\Drupal\cyber_duck_spotify\Controller\SpotifyArtistReactPageController::content'
+    _title: 'Artist | Cyber Duck demo'
+    artist_name: ''
+  requirements:
+    _permission: 'access artist pages'
 cyber_duck_spotify.admin:
   path: '/admin/config/spotify'
   defaults:
