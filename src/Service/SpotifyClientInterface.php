@@ -10,7 +10,7 @@ interface SpotifyClientInterface {
   /**
    * Gets authentication from the Spotify API.
    *
-   * @return array|bool
+   * @return object|bool
    *   The authentication request response or false.
    */
   public function getAuth();
@@ -25,8 +25,8 @@ interface SpotifyClientInterface {
    * @param int $search_count
    *   The number of results to retrieve.
    *
-   * @return array|bool
-   *   An array of results or false.
+   * @return object|bool
+   *   Results or false.
    */
   public function searchSpotifyApi($search_term, $search_type, $search_count);
 
@@ -40,8 +40,8 @@ interface SpotifyClientInterface {
    * @param object $auth
    *   An optional auth result for multiple searches.
    *
-   * @return array|bool
-   *   An array of results or false.
+   * @return object|bool
+   *   Results or false.
    */
   public function getArtistDatabyId($artist_id, $search_type, $auth);
 

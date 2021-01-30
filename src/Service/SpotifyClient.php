@@ -52,7 +52,7 @@ class SpotifyClient implements SpotifyClientInterface {
   /**
    * Gets authentication from the Spotify API.
    *
-   * @return array|bool
+   * @return object|bool
    *   The authentication request response or false.
    */
   public function getAuth() {
@@ -86,6 +86,9 @@ class SpotifyClient implements SpotifyClientInterface {
    *   The search type, albums, artists, songs etc.
    * @param int $search_count
    *   The number of results to retrieve.
+   *
+   * @return object|bool
+   *   Results or false.
    */
   public function searchSpotifyApi($search_term, $search_type, $search_count) {
     $auth = $this->getAuth();
@@ -121,8 +124,8 @@ class SpotifyClient implements SpotifyClientInterface {
    * @param object $auth
    *   An optional auth result for multiple searches.
    *
-   * @return array|bool
-   *   An array of results or false.
+   * @return object|bool
+   *   Results or false.
    */
   public function getArtistDatabyId($artist_id, $search_type, $auth = '') {
     if (empty($auth)) {
