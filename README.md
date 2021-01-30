@@ -9,7 +9,7 @@ Cyber Duck demo module for retrieving and displaying Spotify data. The module pr
 
 # Module theme development
 The module related CSS is compiled and committed, for any changes follow:
-1. Go to `/theme` from the module root
+1. Go to `/styles` from the module root
 1. Run `npm install`
 1. Make any sass changes in the `/sass` folder 
 1. Run `gulp compile` from the theme folder

@@ -28,15 +28,16 @@ function cyber_duck_spotify_help($route_name, RouteMatchInterface $route_match) 
  */
 function cyber_duck_spotify_theme($existing, $type, $theme, $path) {
   return [
-    'cyber-duck-spotify-block' => [
+    'cyber_duck_spotify_block' => [
       'variables' => [
         'artists' => NULL,
       ],
       'template' => 'cyber-duck-spotify-block',
     ],
-    'cyber-duck-spotify-page' => [
+    'cyber_duck_spotify_page' => [
       'variables' => [
         'artist' => NULL,
+        'albums' => NULL,
       ],
       'template' => 'cyber-duck-spotify-page',
     ],

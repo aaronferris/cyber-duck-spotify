@@ -20,16 +20,29 @@ interface SpotifyClientInterface {
    *
    * @param int $search_term
    *   The term to search.
-   * @param int $search_type
+   * @param string $search_type
    *   The search type, albums, artists, songs etc.
    * @param int $search_count
    *   The number of results to retrieve.
-   * @param string $artist_id
-   *   An artist ID.
    *
    * @return array|bool
    *   An array of results or false.
    */
-  public function searchSpotifyApi($search_term, $search_type, $search_count, $artist_id);
+  public function searchSpotifyApi($search_term, $search_type, $search_count);
+
+  /**
+   * Get an artist data from ID.
+   *
+   * @param string $artist_id
+   *   An optional Spotify artist ID.
+   * @param string $search_type
+   *   The search type, albums, artists, songs etc.
+   * @param array $auth
+   *   An optional auth result for multiple searches.
+   *
+   * @return array|bool
+   *   An array of results or false.
+   */
+  public function getArtistDatabyId($artist_id, $search_type, array $auth);
 
 }

@@ -78,35 +78,78 @@ class SpotifyClient implements SpotifyClientInterface {
   }
 
   /**
-   * Search the Spotify API.
+   * Loose search of the Spotify API.
    *
    * @param int $search_term
    *   The term to search.
-   * @param int $search_type
+   * @param string $search_type
    *   The search type, albums, artists, songs etc.
    * @param int $search_count
    *   The number of results to retrieve.
-   * @param string $artist_id
-   *   An optional Spotify artist ID.
-   *
-   * @return array|bool
-   *   An array of results or false.
    */
-  public function searchSpotifyApi($search_term, $search_type, $search_count, $artist_id = '') {
+  public function searchSpotifyApi($search_term, $search_type, $search_count) {
     $auth = $this->getAuth();
 
     if ($auth) {
       // Auth successful.
       $spotify_api_url = $this->config->get('spotify_api_url');
+      try {
+        $request = $this->httpClient->request('GET', $spotify_api_url . "search?q=$search_term&type=$search_type&limit=$search_count", [
+          'headers' => [
+            'Authorization' => $auth->token_type . ' ' . $auth->access_token,
+          ],
+        ]);
 
-      // Loose search.
-      // Format: https://api.spotify.com/v1/search?q=''&type=''&limit=''.
-      $search_url = $spotify_api_url . "search?q=$search_term&type=$search_type&limit=$search_count";
+        return json_decode($request->getBody());
+      }
+      catch (GuzzleException $e) {
+        $this->loggerFactory->get('spotify_client')->error($e);
+        return FALSE;
+      }
+    }
 
-      if (!empty($artist_id)) {
-        // More specific search.
-        // Format: https://api.spotify.com/v1/artists/{artist_id}.
-        $search_url = $spotify_api_url . "artists/$artist_id";
+    return FALSE;
+  }
+
+  /**
+   * Get an artist data from ID.
+   *
+   * @param string $artist_id
+   *   An optional Spotify artist ID.
+   * @param string $search_type
+   *   The search type, albums, artists, songs etc.
+   * @param array $auth
+   *   An optional auth result for multiple searches.
+   *
+   * @return array|bool
+   *   An array of results or false.
+   */
+  public function getArtistDatabyId($artist_id, $search_type, array $auth = []) {
+    if (empty($auth)) {
+      $auth = $this->getAuth();
+    }
+
+    if ($auth) {
+      $spotify_api_url = $this->config->get('spotify_api_url');
+      // More specific search.
+      $search_url = $spotify_api_url . "artists/$artist_id";
+
+      // @todo more api search options.
+      switch ($search_type) {
+        case 'albums':
+          // https://api.spotify.com/v1/artists/{artist_id}/albums.
+          $search_url = $search_url . '/albums?limit=5&include_groups=album';
+          break;
+
+        case 'top-tracks':
+          // https://api.spotify.com/v1/artists/{artist_id}/top-tracks.
+          $search_url = $search_url . '/top-tracks';
+          break;
+
+        case 'related-artists':
+          // https://api.spotify.com/v1/artists/{id}/related-artists'.
+          $search_url = $search_url . '/related-artists';
+
       }
 
       try {

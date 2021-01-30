@@ -32,10 +32,10 @@
       <a href="{{artist.spotify_external_url}}" title="{{ artist.name}}">{{ "Open artist in Spotify"|t }}</a>
     </div>
     {% if albums %}
-      <h3>{{ "Albums"|t }}</h3>
       <div class="spotify-data-artist--albums">
+        <h3>{{ "Albums"|t }}</h3>
         {% for album in albums %}
-          <a href="{{album.url}}" target="_blank" title="{{album.name}}">
+          <a href="{{album.url}}" target="_blank" title="{{album.name}}"
             <img alt={{album.name}} src="{{album.artwork}}">
           </a>
         {% endfor %}

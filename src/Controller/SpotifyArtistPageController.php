@@ -36,7 +36,7 @@ class SpotifyArtistPageController extends ControllerBase {
   }
 
   /**
-   * Get the Artist page contents.
+   * Get the Artist page content.
    *
    * @param string $artist_name
    *   The artist name pulled in from the url - artist/{artist_name}.
@@ -47,20 +47,49 @@ class SpotifyArtistPageController extends ControllerBase {
    *   The content to be built.
    */
   public function content($artist_name, Request $request) {
-    $artist = [];
+    $artist = $albums = $results = [];
     // If a user has routed to the artist page via the block, an ID will be
     // present in the URL as a query parameter. We use this for a more
     // accurate search if available. If the ID isn't available the page
-    // should revert to provide a earch based on artist name instead.
-    // @todo dependency injection.
+    // will revert to provide a search based on artist name instead.
     $artist_id = $request->query->get('id');
-    $result = $this->spotifyClient->searchSpotifyApi($artist_name, 'artist', 1, $artist_id);
 
-    if (!empty($result)) {
+    if (!empty($artist_id)) {
+      // More accurate search based on Spotify artist ID.
+      $auth = $this->spotifyClient->getAuth();
+
+      if ($auth) {
+        $search_types = [
+          'artist',
+          'albums',
+        ];
+
+        foreach ($search_types as $search_type) {
+          $results[$search_type] = $this->spotifyClient->getArtistDatabyId($artist_id, $search_type, $auth);
+
+          if (empty($results[$search_type])) {
+            // getArtistDatabyID can return FALSE if the API result fails
+            // remove this noise here.
+            unset($results[$search_type]);
+          }
+        }
+      }
+    }
+    else {
+      // Loose search.
+      // 1 = result count.
+      $results = $this->spotifyClient->searchSpotifyApi($artist_name, 'artist', 1);
+    }
+
+    if (!empty($results)) {
       if (empty($artist_id)) {
-        // If no ID has been provided the Spotify API returns an array of
-        // a single artist. Handle that difference in structure here.
-        $result = $result->artists->items[0];
+        // If no artist ID has been provided the Spotify API returns an
+        // array of a single artist. Handle that difference in structure
+        // here.
+        $result = $results->artists->items[0];
+      }
+      else {
+        $result = $results['artist'];
       }
 
       $artist = [
@@ -71,11 +100,25 @@ class SpotifyArtistPageController extends ControllerBase {
         'followers' => $result->followers->total,
         'spotify_external_url' => $result->external_urls->spotify,
       ];
+
+      if (!empty($artist_id) && !empty($results['albums'])) {
+        // Only provide album data if firstly album data exists but also
+        // only if the artist ID is present. This is because a loose search
+        // term will find results of album names NOT related to this artist.
+        foreach ($results['albums']->items as $album) {
+          $albums[] = [
+            'name' => $album->name,
+            'artwork' => $album->images[0]->url,
+            'url' => $album->external_urls->spotify,
+          ];
+        }
+      }
     }
 
     $build = [
-      '#theme' => 'cyber-duck-spotify-page',
+      '#theme' => 'cyber_duck_spotify_page',
       '#artist' => $artist,
+      '#albums' => $albums,
     ];
 
     return $build;

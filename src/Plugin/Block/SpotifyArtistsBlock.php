@@ -76,7 +76,7 @@ class SpotifyArtistsBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     $build = [
-      '#theme' => 'cyber-duck-spotify-block',
+      '#theme' => 'cyber_duck_spotify_block',
       '#artists' => $artists,
     ];
 

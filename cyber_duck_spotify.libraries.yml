@@ -2,4 +2,4 @@ cyber_duck_spotify:
   version: '1.x'
   css:
     theme:
-      theme/css/cyber-duck-spotify.css: {}
+      styles/css/cyber-duck-spotify.css: {}
