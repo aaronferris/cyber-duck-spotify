@@ -53,64 +53,66 @@ class SpotifyArtistPageController extends ControllerBase {
     // accurate search if available. If the ID isn't available the page
     // will revert to provide a search based on artist name instead.
     $artist_id = $request->query->get('id');
+    $auth = $this->spotifyClient->getAuth();
 
-    if (!empty($artist_id)) {
-      // More accurate search based on Spotify artist ID.
-      $auth = $this->spotifyClient->getAuth();
+    $search_types = [
+      'artist',
+      'albums',
+    ];
 
-      if ($auth) {
-        $search_types = [
-          'artist',
-          'albums',
-        ];
-
+    if ($auth) {
+      if (!empty($artist_id)) {
+        // More accurate search based on Spotify artist ID.
         foreach ($search_types as $search_type) {
           $results[$search_type] = $this->spotifyClient->getArtistDatabyId($artist_id, $search_type, $auth);
-
-          if (empty($results[$search_type])) {
-            // getArtistDatabyID can return FALSE if the API result fails
-            // remove this noise here.
-            unset($results[$search_type]);
-          }
         }
       }
-    }
-    else {
-      // Loose search.
-      // 1 = result count.
-      $results = $this->spotifyClient->searchSpotifyApi($artist_name, 'artist', 1);
-    }
-
-    if (!empty($results)) {
-      if (empty($artist_id)) {
-        // If no artist ID has been provided the Spotify API returns an
-        // array of a single artist. Handle that difference in structure
-        // here.
-        $result = $results->artists->items[0];
-      }
       else {
-        $result = $results['artist'];
+        // Loose search.
+        // 1 = result count.
+        $results['artist'] = $this->spotifyClient->searchSpotifyApi($artist_name, 'artist', 1);
+        $id = $results['artist']->artists->items[0]->id;
+        // Now we have the artist ID get further data.
+        $results['albums'] = $this->spotifyClient->getArtistDatabyId($id, 'albums', $auth);
       }
 
-      $artist = [
-        'name' => $result->name,
-        'id' => $result->id,
-        'genres' => implode(',', $result->genres),
-        'image' => $result->images[0]->url,
-        'followers' => $result->followers->total,
-        'spotify_external_url' => $result->external_urls->spotify,
-      ];
+      foreach ($search_types as $search_type) {
+        if (empty($results[$search_type])) {
+          // The API calls may return false, clean up that noise here.
+          unset($results[$search_type]);
+        }
+      }
 
-      if (!empty($artist_id) && !empty($results['albums'])) {
-        // Only provide album data if firstly album data exists but also
-        // only if the artist ID is present. This is because a loose search
-        // term will find results of album names NOT related to this artist.
-        foreach ($results['albums']->items as $album) {
-          $albums[] = [
-            'name' => $album->name,
-            'artwork' => $album->images[0]->url,
-            'url' => $album->external_urls->spotify,
-          ];
+      if (!empty($results)) {
+        if (empty($artist_id)) {
+          // If no artist ID has been provided the Spotify search API
+          // returns an array of a single artist. Handle that difference
+          // in structure here.
+          $result = $results['artist']->artists->items[0];
+        }
+        else {
+          $result = $results['artist'];
+        }
+
+        // Build the artist data.
+        $artist = [
+          'name' => $result->name,
+          'id' => $result->id,
+          'genres' => implode(',', $result->genres),
+          'image' => $result->images[0]->url,
+          'followers' => $result->followers->total,
+          'spotify_external_url' => $result->external_urls->spotify,
+        ];
+
+        // Add any album data.
+        if (!empty($results['albums'])) {
+          foreach ($results['albums']->items as $album) {
+            $albums[] = [
+              'name' => $album->name,
+              'artwork' => $album->images[0]->url,
+              'url' => $album->external_urls->spotify,
+            ];
+          }
         }
       }
     }
