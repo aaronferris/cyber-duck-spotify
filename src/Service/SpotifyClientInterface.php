@@ -24,11 +24,13 @@ interface SpotifyClientInterface {
    *   The search type, albums, artists, songs etc.
    * @param int $search_count
    *   The number of results to retrieve.
+   * @param object $auth
+   *   An optional auth result for multiple searches.
    *
    * @return object|bool
    *   Results or false.
    */
-  public function searchSpotifyApi($search_term, $search_type, $search_count);
+  public function searchSpotifyApi($search_term, $search_type, $search_count, $auth);
 
   /**
    * Get an artist data from ID.

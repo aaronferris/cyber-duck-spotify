@@ -86,12 +86,16 @@ class SpotifyClient implements SpotifyClientInterface {
    *   The search type, albums, artists, songs etc.
    * @param int $search_count
    *   The number of results to retrieve.
+   * @param object $auth
+   *   An optional auth result for multiple searches.
    *
    * @return object|bool
    *   Results or false.
    */
-  public function searchSpotifyApi($search_term, $search_type, $search_count) {
-    $auth = $this->getAuth();
+  public function searchSpotifyApi($search_term, $search_type, $search_count, $auth = '') {
+    if (empty($auth)) {
+      $auth = $this->getAuth();
+    }
 
     if ($auth) {
       // Auth successful.
@@ -141,7 +145,7 @@ class SpotifyClient implements SpotifyClientInterface {
       switch ($search_type) {
         case 'albums':
           // https://api.spotify.com/v1/artists/{artist_id}/albums.
-          $search_url = $search_url . '/albums?limit=5&include_groups=album';
+          $search_url = $search_url . '/albums?limit=10&include_groups=album';
           break;
 
         case 'top-tracks':

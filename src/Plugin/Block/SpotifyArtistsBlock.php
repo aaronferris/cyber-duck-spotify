@@ -58,7 +58,7 @@ class SpotifyArtistsBlock extends BlockBase implements ContainerFactoryPluginInt
     $artists = [];
 
     // Seems there isnt a way of a random artist search, so randomize it in
-    // code.
+    // code. @todo - would be nice to get a search term field in here.
     // 65 = letter A. 65+25 = Z. Which gives the full alphabet range.
     $search_term = chr(65 + rand(0, 25));
 
@@ -95,6 +95,7 @@ class SpotifyArtistsBlock extends BlockBase implements ContainerFactoryPluginInt
       '#attributes' => [
         'data-type' => 'number',
       ],
+      '#required' => TRUE,
       '#maxlength' => 2,
       '#title' => $this->t('Artist display count'),
       '#description' => $this->t('Select the max number of artists to display in this block.'),
@@ -110,8 +111,8 @@ class SpotifyArtistsBlock extends BlockBase implements ContainerFactoryPluginInt
   public function blockValidate($form, FormStateInterface $form_state) {
     $artist_count = $form_state->getValue('artist_count');
 
-    if (!is_numeric($artist_count) || $artist_count > 20) {
-      $form_state->setErrorByName('artist_count', $this->t('Count must be a number and less than or equal to 20'));
+    if (!is_numeric($artist_count) || $artist_count > 20 || $artist_count < 1) {
+      $form_state->setErrorByName('artist_count', $this->t('Count must be a number, min 1, max 20'));
     }
   }
 

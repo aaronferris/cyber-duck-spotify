@@ -1,7 +1,7 @@
 # cyber-duck-demo-module
 Cyber Duck demo module for retrieving and displaying Spotify data. The module provides two methods of retrieving data:
 1. A block - added via `admin/structure/block`, block name `Spotify artists`
-1. A page - `/artist/{artist-name}?id=` - the page accepts an optional artist ID parameter. If the parameter is included the Spotify API will return a result based on artist ID (should be more accurate). The block provides this query string on links to the artist page by default. If no query parameter is present the page will return a result based on artist name.
+1. A page - `/artist/{artist-name}` 
 
 # Module config
 1. Go to `/admin/config/spotify`

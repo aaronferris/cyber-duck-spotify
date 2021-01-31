@@ -34,9 +34,9 @@
     {% if albums %}
       <h3>{{ "Albums"|t }}</h3>
       <div class="spotify-data-artist--albums">
-        {% for album in albums %}
-          <a href="{{album.url}}" target="_blank" title="{{album.name}}">
-            <img alt={{album.name}} src="{{album.artwork}}">
+        {% for key, album in albums %}
+          <a href="{{album.url}}" target="_blank" title="{{key}}">
+            <img alt="{{album.key}}" src="{{album.artwork}}">
           </a>
         {% endfor %}
       </div>

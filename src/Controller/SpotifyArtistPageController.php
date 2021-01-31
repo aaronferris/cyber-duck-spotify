@@ -5,7 +5,6 @@ namespace Drupal\cyber_duck_spotify\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\cyber_duck_spotify\Service\SpotifyClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Spotify artist page controller.
@@ -40,19 +39,12 @@ class SpotifyArtistPageController extends ControllerBase {
    *
    * @param string $artist_name
    *   The artist name pulled in from the url - artist/{artist_name}.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
    *
    * @return array
    *   The content to be built.
    */
-  public function content($artist_name, Request $request) {
+  public function content($artist_name) {
     $artist = $albums = $results = [];
-    // If a user has routed to the artist page via the block, an ID will be
-    // present in the URL as a query parameter. We use this for a more
-    // accurate search if available. If the ID isn't available the page
-    // will revert to provide a search based on artist name instead.
-    $artist_id = $request->query->get('id');
     $auth = $this->spotifyClient->getAuth();
 
     $search_types = [
@@ -61,20 +53,11 @@ class SpotifyArtistPageController extends ControllerBase {
     ];
 
     if ($auth) {
-      if (!empty($artist_id)) {
-        // More accurate search based on Spotify artist ID.
-        foreach ($search_types as $search_type) {
-          $results[$search_type] = $this->spotifyClient->getArtistDatabyId($artist_id, $search_type, $auth);
-        }
-      }
-      else {
-        // Loose search.
-        // 1 = result count.
-        $results['artist'] = $this->spotifyClient->searchSpotifyApi($artist_name, 'artist', 1);
-        $id = $results['artist']->artists->items[0]->id;
-        // Now we have the artist ID get further data.
-        $results['albums'] = $this->spotifyClient->getArtistDatabyId($id, 'albums', $auth);
-      }
+      // First get the artist from the artist name.
+      $results['artist'] = $this->spotifyClient->searchSpotifyApi($artist_name, 'artist', 1, $auth);
+      $id = $results['artist']->artists->items[0]->id;
+      // Now we have the artist ID get further data.
+      $results['albums'] = $this->spotifyClient->getArtistDatabyId($id, 'albums', $auth);
 
       foreach ($search_types as $search_type) {
         if (empty($results[$search_type])) {
@@ -84,34 +67,27 @@ class SpotifyArtistPageController extends ControllerBase {
       }
 
       if (!empty($results)) {
-        if (empty($artist_id)) {
-          // If no artist ID has been provided the Spotify search API
-          // returns an array of a single artist. Handle that difference
-          // in structure here.
+        if (!empty($results['artist']->artists->items[0])) {
           $result = $results['artist']->artists->items[0];
-        }
-        else {
-          $result = $results['artist'];
-        }
 
-        // Build the artist data.
-        $artist = [
-          'name' => $result->name,
-          'id' => $result->id,
-          'genres' => implode(',', $result->genres),
-          'image' => $result->images[0]->url,
-          'followers' => $result->followers->total,
-          'spotify_external_url' => $result->external_urls->spotify,
-        ];
+          // Build the artist data.
+          $artist = [
+            'name' => $result->name,
+            'id' => $result->id,
+            'genres' => implode(',', $result->genres),
+            'image' => $result->images[0]->url,
+            'followers' => $result->followers->total,
+            'spotify_external_url' => $result->external_urls->spotify,
+          ];
 
-        // Add any album data.
-        if (!empty($results['albums'])) {
-          foreach ($results['albums']->items as $album) {
-            $albums[] = [
-              'name' => $album->name,
-              'artwork' => $album->images[0]->url,
-              'url' => $album->external_urls->spotify,
-            ];
+          // Add any album data.
+          if (!empty($results['albums'])) {
+            foreach ($results['albums']->items as $album) {
+              $albums[$album->name] = [
+                'artwork' => $album->images[0]->url,
+                'url' => $album->external_urls->spotify,
+              ];
+            }
           }
         }
       }

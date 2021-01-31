@@ -15,7 +15,7 @@
   {% if artists %}
     {% for artist in artists %}
       {% set artist_url_segment = artist.name|lower|replace({' ': '-'}) %}
-      <a class="spotify-data--artist" href="/artist/{{artist_url_segment}}?id={{artist.id}}" title={{ artist.name }}>{{ artist.name }}</a>
+      <a class="spotify-data--artist" href="/artist/{{artist_url_segment}}" title={{ artist.name }}>{{ artist.name }}</a>
    {% endfor %}
    {% else %}
      {{ "No results found"|t }}
